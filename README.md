@@ -9,7 +9,7 @@
 ```hcl
 module "appservice_acmebot" {
   source  = "shibayan/appservice-acmebot/azurerm"
-  version = "1.0.0"
+  version = "~> 1.0"
 
   function_app_name     = "func-acmebot-module"
   app_service_plan_name = "plan-acmebot-module"
