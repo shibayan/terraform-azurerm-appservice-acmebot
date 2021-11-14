@@ -1,5 +1,6 @@
 # App Service Acmebot Terraform module
 
+[![Validate](https://github.com/shibayan/terraform-azurerm-appservice-acmebot/actions/workflows/validate.yml/badge.svg)](https://github.com/shibayan/terraform-azurerm-appservice-acmebot/actions/workflows/validate.yml)
 [![Release](https://img.shields.io/github/release/shibayan/terraform-azurerm-appservice-acmebot.svg)](https://github.com/shibayan/terraform-azurerm-appservice-acmebot/releases/latest)
 [![License](https://img.shields.io/github/license/shibayan/terraform-azurerm-appservice-acmebot.svg)](https://github.com/shibayan/terraform-azurerm-appservice-acmebot/blob/master/LICENSE)
 [![Terraform Registry](https://img.shields.io/badge/terraform-registry-5c4ee5.svg)](https://registry.terraform.io/modules/shibayan/appservice-acmebot/azurerm/latest)
