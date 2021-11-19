@@ -50,6 +50,12 @@ variable "environment" {
   default     = "AzureCloud"
 }
 
+variable "time_zone" {
+  type        = string
+  description = "The name of time zone as the basis for automatic update timing."
+  default     = "UTC"
+}
+
 locals {
   acmebot_app_settings = {
     "Acmebot:SubscriptionId" = var.subscription_id
