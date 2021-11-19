@@ -38,13 +38,13 @@ resource "azurerm_function_app" "function" {
   storage_account_access_key = azurerm_storage_account.storage.primary_access_key
   version                    = "~3"
   https_only                 = true
-  client_affinity_enabled    = false
   enable_builtin_logging     = false
 
   app_settings = merge({
     "APPLICATIONINSIGHTS_CONNECTION_STRING" = azurerm_application_insights.insights.connection_string
     "FUNCTIONS_WORKER_RUNTIME"              = "dotnet"
     "WEBSITE_RUN_FROM_PACKAGE"              = "https://shibayan.blob.core.windows.net/azure-appservice-letsencrypt/v3/latest.zip"
+    "WEBSITE_TIME_ZONE"                     = var.time_zone
   }, local.acmebot_app_settings)
 
   identity {
