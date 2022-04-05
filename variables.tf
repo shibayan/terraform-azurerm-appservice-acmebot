@@ -61,11 +61,69 @@ variable "time_zone" {
   default     = "UTC"
 }
 
+variable "webhook_url" {
+  type        = string
+  description = "The webhook where notifications will be sent."
+  default     = null
+}
+
+variable "external_account_binding" {
+  type = object({
+    key_id    = string
+    hmac_key  = string
+    algorithm = string
+  })
+  default = null
+}
+
+variable "auth_settings" {
+  type = object({
+    enabled                       = bool
+    issuer                        = string
+    token_store_enabled           = bool
+    unauthenticated_client_action = string
+    active_directory = object({
+      client_id         = string
+      allowed_audiences = list(string)
+    })
+  })
+  description = "Authentication settings for the function app"
+  default     = null
+}
+
+variable "app_settings" {
+  description = "Additional settings to set for the function app"
+  type        = map(string)
+  default     = {}
+}
+
+variable "allowed_ip_addresses" {
+  type        = list(string)
+  description = "A list of allowed ip addresses that can access the Acmebot UI."
+  default     = []
+}
+
 locals {
-  acmebot_app_settings = {
+  external_account_binding = var.external_account_binding != null ? {
+    "Acmebot:ExternalAccountBinding:KeyId"     = var.external_account_binding.key_id
+    "Acmebot:ExternalAccountBinding:HmacKey"   = var.external_account_binding.hmac_key
+    "Acmebot:ExternalAccountBinding:Algorithm" = var.external_account_binding.algorithm
+  } : {}
+
+  webhook_url = var.webhook_url != null ? {
+    "Acmebot:Webhook" = var.webhook_url
+  } : {}
+
+  common = {
     "Acmebot:SubscriptionId" = var.subscription_id
     "Acmebot:Contacts"       = var.mail_address
     "Acmebot:Endpoint"       = var.acme_endpoint
     "Acmebot:Environment"    = var.environment
   }
+
+  acmebot_app_settings = merge(
+    local.common,
+    local.external_account_binding,
+    local.webhook_url
+  )
 }

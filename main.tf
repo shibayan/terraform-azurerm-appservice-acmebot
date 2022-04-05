@@ -1,13 +1,13 @@
 resource "azurerm_storage_account" "storage" {
-  name                      = var.storage_account_name
-  resource_group_name       = var.resource_group_name
-  location                  = var.location
-  account_kind              = "Storage"
-  account_tier              = "Standard"
-  account_replication_type  = "LRS"
-  enable_https_traffic_only = true
-  allow_blob_public_access  = false
-  min_tls_version           = "TLS1_2"
+  name                            = var.storage_account_name
+  resource_group_name             = var.resource_group_name
+  location                        = var.location
+  account_kind                    = "Storage"
+  account_tier                    = "Standard"
+  account_replication_type        = "LRS"
+  enable_https_traffic_only       = true
+  allow_nested_items_to_be_public = false
+  min_tls_version                 = "TLS1_2"
 }
 
 resource "azurerm_app_service_plan" "serverfarm" {
@@ -54,14 +54,35 @@ resource "azurerm_function_app" "function" {
     "FUNCTIONS_WORKER_RUNTIME"              = "dotnet"
     "WEBSITE_RUN_FROM_PACKAGE"              = "https://shibayan.blob.core.windows.net/azure-appservice-letsencrypt/v3/latest.zip"
     "WEBSITE_TIME_ZONE"                     = var.time_zone
-  }, local.acmebot_app_settings)
+  }, local.acmebot_app_settings, var.app_settings)
 
   identity {
     type = "SystemAssigned"
   }
 
+  dynamic "auth_settings" {
+    for_each = toset(var.auth_settings != null ? [1] : [])
+    content {
+      enabled                       = var.auth_settings.enabled
+      unauthenticated_client_action = var.auth_settings.unauthenticated_client_action
+      issuer                        = var.auth_settings.issuer
+      token_store_enabled           = var.auth_settings.token_store_enabled
+      active_directory {
+        allowed_audiences = var.auth_settings.active_directory.allowed_audiences
+        client_id         = var.auth_settings.active_directory.client_id
+      }
+    }
+  }
+
   site_config {
     ftps_state      = "Disabled"
     min_tls_version = "1.2"
+
+    dynamic "ip_restriction" {
+      for_each = var.allowed_ip_addresses
+      content {
+        ip_address = ip_restriction.value
+      }
+    }
   }
 }
