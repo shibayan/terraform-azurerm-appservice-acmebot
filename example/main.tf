@@ -4,7 +4,7 @@ provider "azurerm" {
 
 terraform {
   required_providers {
-    azurerm = "~> 2.0"
+    azurerm = "~> 3.0"
   }
 }
 
@@ -24,6 +24,7 @@ module "appservice_acmebot" {
   app_service_plan_name = "plan-acmebot-module"
   storage_account_name  = "stacmebotmodule"
   app_insights_name     = "appi-acmebot-module"
+  workspace_name        = "log-acmebot-module"
   resource_group_name   = azurerm_resource_group.default.name
   location              = azurerm_resource_group.default.location
   mail_address          = "YOUR-EMAIL-ADDRESS"
