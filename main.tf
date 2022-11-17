@@ -47,7 +47,7 @@ resource "azurerm_windows_function_app" "function" {
   https_only                  = true
 
   app_settings = merge({
-    "WEBSITE_RUN_FROM_PACKAGE" = "https://stacmebotprod.blob.core.windows.net/keyvault-acmebot/v4/latest.zip"
+    "WEBSITE_RUN_FROM_PACKAGE" = "https://stacmebotprod.blob.core.windows.net/appservice-acmebot/v4/latest.zip"
     "WEBSITE_TIME_ZONE"        = var.time_zone
   }, local.acmebot_app_settings, var.app_settings)
 
